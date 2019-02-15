@@ -1,6 +1,6 @@
 .vs
 
-Release
-x64
-snake/Release
-snake/x64
+/Release
+/x64
+/snake/Release
+/snake/x64
