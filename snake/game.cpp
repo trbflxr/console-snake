@@ -3,15 +3,14 @@
 
 
 Game::Game(int boardSize)
-    : food(nullptr),
-      score(0),
+    : score(0),
       shouldStop(false),
       moveThread(nullptr) {
 
     srand(static_cast<unsigned>(time(nullptr)));
 
     board = new Board(boardSize, boardSize * 2, this);
-    snake = new Snake(board, {5, 5}, Direction::Right);
+    snake = new Snake(this, board, {5, 5}, Direction::Right);
 }
 
 Game::~Game() {
@@ -29,7 +28,7 @@ void Game::start() {
 
     board->generate();
     snake->spawn();
-    spawnFood();
+	board->spawnFood();
 
     //repaint thread
     board->startRepaint();
@@ -78,7 +77,7 @@ void Game::stop() {
 
 void Game::moveFunc() {
     while (!shouldStop) {
-        Display::sleep(100);
+        Display::sleep(200);
 
         const Node *h = snake->getNextHead();
         const point &p = h->pos;
@@ -94,13 +93,6 @@ void Game::moveFunc() {
             stop();
         }
 
-        //food
-        if (p == food->pos) {
-            score += SCORE_PTS;
-            snake->eat(food);
-            spawnFood();
-        }
-
         snake->move();
     }
 }
@@ -108,11 +100,4 @@ void Game::moveFunc() {
 void Game::moveFuncWrapper(void *data) {
     Game *g = static_cast<Game *>(data);
     g->moveFunc();
-}
-
-void Game::spawnFood() {
-    const point &p = board->getRandomPoint();
-
-    food = board->getNode(p);
-    food->type = NodeType::Food;
 }

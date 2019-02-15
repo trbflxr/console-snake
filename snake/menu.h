@@ -6,22 +6,23 @@ class Game;
 
 class Menu final {
 public:
-    explicit Menu(Game *game);
+	explicit Menu(Game* game);
 
-    void showMenu();
-
-private:
-    void drawButton(int row, int column, int index, const char *text) const;
-
-    void action();
-
-    void about();
-    void score();
+	void showMenu();
 
 private:
-    Game *game;
+	void drawButton(int row, int column, int index, const char* text) const;
 
-    int selected;
+	void action();
+
+	void about();
+	void score();
+	void controls();
+
+private:
+	Game* game;
+
+	int selected;
 };
 
 

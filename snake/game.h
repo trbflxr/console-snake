@@ -16,20 +16,18 @@ public:
     void start();
     void stop();
 
+    inline void addScore(int pts) { score += pts; }
     inline int getScore() const { return score; }
     inline bool isOver() const { return shouldStop; }
 
 private:
     void moveFunc();
     static void moveFuncWrapper(void *data);
-
-    void spawnFood();
-
+    
 private:
     Board *board;
     Snake *snake;
 
-    Node *food;
     int score;
 
     bool shouldStop;

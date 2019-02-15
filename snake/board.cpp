@@ -137,6 +137,11 @@ point Board::getRandomPoint() const {
     return p;
 }
 
+void Board::spawnFood() const {
+    const point &p = getRandomPoint();
+    Node *f = getNode(p);
+    f->type = NodeType::Food;
+}
 
 void Board::autoPaintFunc() {
     while (repaint) {

@@ -7,14 +7,14 @@
 #include "node.h"
 #include "point.h"
 
-#define HBORDER_CHAR '-'
-#define VBORDER_CHAR '|'
-#define SNAKE_HEAD_CHAR 'x'
-#define SNAKE_BODY_CHAR 'o'
-#define FOOD_CHAR '*'
-#define VOID_CHAR ' '
+#define HBORDER_CHAR        '#'
+#define VBORDER_CHAR        '#'
+#define SNAKE_HEAD_CHAR     'x'
+#define SNAKE_BODY_CHAR     'o'
+#define FOOD_CHAR           '*'
+#define VOID_CHAR           ' '
 
-#define REPAINT_INTERVAL 100
+#define REPAINT_INTERVAL    100
 
 
 class Game;
@@ -35,6 +35,8 @@ public:
     Node *getNode(const point &pos) const;
 
     point getRandomPoint() const;
+
+	void spawnFood() const;
 
     inline int getRows() const { return rows; }
     inline int getColumns() const { return columns; }

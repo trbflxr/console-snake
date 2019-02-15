@@ -8,6 +8,7 @@
 #include "node.h"
 
 class Board;
+class Game;
 
 enum class Direction {
     Left,
@@ -18,7 +19,7 @@ enum class Direction {
 
 class Snake final {
 public:
-    explicit Snake(Board *board, const point &tailPos, Direction direction);
+    explicit Snake(Game* game, Board *board, const point &tailPos, Direction direction);
 
     void spawn();
 
@@ -28,10 +29,17 @@ public:
 
     Node *getNextHead() const;
 
-    void eat(Node *food);
+private:
+    bool checkDirection(Direction d) const;
+
+    void moveInternal();
+
+	void eat(Node* food);
 
 private:
+    Game *game;
     Board *board;
+
     const point startPos;
     const Direction startDirection;
     Direction direction;
@@ -39,6 +47,7 @@ private:
     //this will be deleted by board
     Node *head;
     std::deque<Node*> body;
+    std::deque<Direction> nextDirection;
 
     std::mutex mutex;
 };

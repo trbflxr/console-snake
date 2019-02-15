@@ -1,8 +1,11 @@
 #include "snake.h"
+#include "game.h"
 #include "board.h"
 
-Snake::Snake(Board *board, const point &tailPos, Direction direction)
-    : board(board),
+
+Snake::Snake(Game *game, Board *board, const point &tailPos, Direction direction)
+    : game(game),
+      board(board),
       startPos(tailPos),
       startDirection(direction),
       direction(direction),
@@ -11,6 +14,7 @@ Snake::Snake(Board *board, const point &tailPos, Direction direction)
 void Snake::spawn() {
     body.clear();
 
+    nextDirection.clear();
     direction = startDirection;
 
     //create snake
@@ -30,21 +34,49 @@ void Snake::spawn() {
 }
 
 void Snake::changeDirection(Direction direction) {
-    if (direction == Direction::Left && Snake::direction == Direction::Right ||
-        direction == Direction::Right && Snake::direction == Direction::Left ||
-        direction == Direction::Up && Snake::direction == Direction::Down ||
-        direction == Direction::Down && Snake::direction == Direction::Up) {
-        return;
+    if (nextDirection.size() < 2 && Snake::direction != direction) {
+        nextDirection.push_back(direction);
     }
-
-    Snake::direction = direction;
 }
 
 void Snake::move() {
+    bool moved = false;
+
     std::lock_guard<std::mutex> guard(mutex);
 
-    //"swap" back and front snake body piece
+    //this needed for "sharp turns"
+    //when pressed arrow down and arrow left
+    //snake do this:
+    //
+    //   ooo
+    //    xo
+    //
+	//initial direction: right
+
+    for (auto &&d : nextDirection) {
+        if (checkDirection(d)) {
+            direction = d;
+            moveInternal();
+            moved = true;
+        }
+    }
+
+    if (!moved) {
+        moveInternal();
+    } else {
+        nextDirection.clear();
+    }
+}
+
+void Snake::moveInternal() {
     Node *nextHead = getNextHead();
+    if (nextHead->type == NodeType::Food) {
+        eat(nextHead);
+        game->addScore(SCORE_PTS);
+        board->spawnFood();
+        return;
+    }
+    //if !food swap back and front body pieces
     nextHead->type = NodeType::SnakeHead;
 
     head->type = NodeType::SnakeBody;
@@ -69,8 +101,7 @@ Node *Snake::getNextHead() const {
 }
 
 void Snake::eat(Node *food) {
-    std::lock_guard<std::mutex> guard(mutex);
-
+    //it's locked already in move method
     //food node is now snakes head
     Node *newHead = food;
     newHead->type = NodeType::SnakeHead;
@@ -80,4 +111,11 @@ void Snake::eat(Node *food) {
     body.push_front(newHead);
 
     head = newHead;
+}
+
+bool Snake::checkDirection(Direction d) const {
+    return !(d == Direction::Left && direction == Direction::Right ||
+        d == Direction::Right && direction == Direction::Left ||
+        d == Direction::Up && direction == Direction::Down ||
+        d == Direction::Down && direction == Direction::Up);
 }
