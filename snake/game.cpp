@@ -2,8 +2,9 @@
 #include "game.h"
 
 
-Game::Game(int boardSize)
-    : score(0),
+Game::Game(int boardSize, int frameDelay)
+    : frameDelay(frameDelay),
+      score(0),
       shouldStop(false),
       moveThread(nullptr) {
 
@@ -28,7 +29,7 @@ void Game::start() {
 
     board->generate();
     snake->spawn();
-	board->spawnFood();
+    board->spawnFood();
 
     //repaint thread
     board->startRepaint();
@@ -75,23 +76,9 @@ void Game::stop() {
     }
 }
 
-void Game::moveFunc() {
+void Game::moveFunc() const {
     while (!shouldStop) {
-        Display::sleep(200);
-
-        const Node *h = snake->getNextHead();
-        const point &p = h->pos;
-
-        //bounds check
-        if (p.x < 1 || p.x > board->getRows() ||
-            p.y < 1 || p.y > board->getColumns()) {
-            stop();
-        }
-
-        //self check
-        if (h->type == NodeType::SnakeBody) {
-            stop();
-        }
+        Display::sleep(frameDelay);
 
         snake->move();
     }

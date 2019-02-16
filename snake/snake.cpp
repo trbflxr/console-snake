@@ -51,7 +51,7 @@ void Snake::move() {
     //   ooo
     //    xo
     //
-	//initial direction: right
+    //initial direction: right
 
     for (auto &&d : nextDirection) {
         if (checkDirection(d)) {
@@ -63,9 +63,8 @@ void Snake::move() {
 
     if (!moved) {
         moveInternal();
-    } else {
-        nextDirection.clear();
     }
+    nextDirection.clear();
 }
 
 void Snake::moveInternal() {
@@ -76,7 +75,14 @@ void Snake::moveInternal() {
         board->spawnFood();
         return;
     }
-    //if !food swap back and front body pieces
+
+    if (nextHead->type == NodeType::Border || nextHead->type == NodeType::SnakeBody) {
+        nextHead->type = NodeType::SnakeHit;
+        game->stop();
+        return;
+    }
+
+    //swap back and front body pieces
     nextHead->type = NodeType::SnakeHead;
 
     head->type = NodeType::SnakeBody;

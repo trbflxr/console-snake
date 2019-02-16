@@ -5,7 +5,7 @@
 int main(int argc, char *argv[]) {
     Display::init();
 
-    Game game(20);
+    Game game(20, 150);
 
     Menu menu(&game);
     menu.showMenu();

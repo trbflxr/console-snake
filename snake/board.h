@@ -7,9 +7,9 @@
 #include "node.h"
 #include "point.h"
 
-#define HBORDER_CHAR        '#'
-#define VBORDER_CHAR        '#'
+#define BORDER_CHAR         '#'
 #define SNAKE_HEAD_CHAR     'x'
+#define SNAKE_HIT_CHAR      '%'
 #define SNAKE_BODY_CHAR     'o'
 #define FOOD_CHAR           '*'
 #define VOID_CHAR           ' '

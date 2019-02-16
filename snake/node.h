@@ -7,10 +7,10 @@
 class Board;
 
 enum class NodeType {
-    HBorder,
-    VBorder,
+    Border,
     SnakeHead,
     SnakeBody,
+    SnakeHit,
     Food,
     Void
 };

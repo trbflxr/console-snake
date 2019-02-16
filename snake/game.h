@@ -10,7 +10,7 @@
 
 class Game final {
 public:
-    explicit Game(int boardSize);
+    explicit Game(int boardSize, int frameDelay);
     ~Game();
 
     void start();
@@ -21,13 +21,14 @@ public:
     inline bool isOver() const { return shouldStop; }
 
 private:
-    void moveFunc();
+    void moveFunc() const;
     static void moveFuncWrapper(void *data);
     
 private:
     Board *board;
     Snake *snake;
 
+	int frameDelay;
     int score;
 
     bool shouldStop;

@@ -32,10 +32,8 @@ void Board::generate() const {
     for (int i = 0; i < rows + 2; ++i) {
         for (int j = 0; j < columns + 2; ++j) {
             Node *n = getNode({j, i});
-            if (i == 0 || i == rows + 1) {
-                n->type = NodeType::HBorder;
-            } else if (j == 0 || j == columns + 1) {
-                n->type = NodeType::VBorder;
+            if (i == 0 || i == rows + 1 || j == 0 || j == columns + 1) {
+                n->type = NodeType::Border;
             } else {
                 n->type = NodeType::Void;
             }
@@ -48,14 +46,9 @@ void Board::draw() {
     for (auto &&n : nodes) {
         int ch;
         switch (n->type) {
-            case NodeType::HBorder: {
+            case NodeType::Border: {
                 color = WHITE;
-                ch = HBORDER_CHAR;
-                break;
-            }
-            case NodeType::VBorder: {
-                color = WHITE;
-                ch = VBORDER_CHAR;
+                ch = BORDER_CHAR;
                 break;
             }
             case NodeType::SnakeHead: {
@@ -66,6 +59,11 @@ void Board::draw() {
             case NodeType::SnakeBody: {
                 color = GREEN;
                 ch = SNAKE_BODY_CHAR;
+                break;
+            }
+            case NodeType::SnakeHit: {
+                color = YELLOW;
+                ch = SNAKE_HIT_CHAR;
                 break;
             }
             case NodeType::Food: {

@@ -7,6 +7,7 @@
 #define WHITE               0x00
 #define RED                 0x01
 #define GREEN               0x02
+#define YELLOW              0x03
 
 #define KEY_RETURN          0x0a
 #define KEY_ESC             0x1b
